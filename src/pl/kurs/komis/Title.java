@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,7 +19,7 @@ public class Title implements Serializable{
 	long idt;
 	String author;
 	String title;
-	List<Volume> volumes;
+	List<Long> volumes;
 	
 	@Id
 	@GeneratedValue
@@ -47,12 +48,13 @@ public class Title implements Serializable{
 		title = newTitle;
 	}
 	
-	@OneToMany(mappedBy = "title", cascade = CascadeType.ALL)
-	public List<Volume> getVolumes() {
+	//@OneToMany(mappedBy = "title", cascade = CascadeType.ALL)
+	@ElementCollection
+	public List<Long> getVolumes() {
 		return volumes;
 	}
 	
-	public void setVolumes(List<Volume> newVolumes) {
+	public void setVolumes(List<Long> newVolumes) {
 		volumes = newVolumes;
 	}
 
