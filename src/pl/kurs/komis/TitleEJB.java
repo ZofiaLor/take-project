@@ -36,12 +36,14 @@ public class TitleEJB{
 		return titles;
 	}
 	
-	public Title findById(long idt) {
+	public List<Title> findById(long idt) {
 		Query q = manager.createQuery("select t.idt, t.author, t.title from Title t where t.idt = :idt");
+		System.out.println(idt);
 		q.setParameter("idt", idt);
 		@SuppressWarnings("unchecked")
 		List<Title> title = q.getResultList();
-		return title.get(0);
+		System.out.println(title.size());
+		return title;
 	}
 	
 	public List<Long> findTitlesVolumes(long idt){

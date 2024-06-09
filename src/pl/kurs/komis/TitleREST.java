@@ -11,6 +11,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 @Path("/title")
 @Consumes({ "application/json" })
@@ -30,16 +31,22 @@ public class TitleREST {
 	}
 	
 	@GET
-	public Titles get() {
-		List<Title> lt = bean.get();
+	public Titles get(@QueryParam("author") String author) {
+		List<Title> lt;
+		if (author != null) {
+			lt = bean.getByAuthor(author);
+		}
+		else {
+			lt = bean.get();
+		}
 		Titles titles = new Titles(lt);
 		return titles;
 	}
 	
 	@GET
 	@Path("/{idt}")
-	public Title findById(@PathParam("idt") long idt) {
-		Title title = bean.findById(idt);
+	public List<Title> findById(@PathParam("idt") long idt) {
+		List<Title> title = bean.findById(idt);
 		return title;
 	}
 	
