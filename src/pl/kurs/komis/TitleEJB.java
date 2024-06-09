@@ -47,10 +47,14 @@ public class TitleEJB{
 	}
 	
 	public List<Long> findTitlesVolumes(long idt){
-		Query q = manager.createQuery("select t.volumes from Title t where t.idt = :idt");
+		Query q = manager.createQuery("select t from Title t where t.idt = :idt");
 		q.setParameter("idt", idt);
 		@SuppressWarnings("unchecked")
-		List<Long> vols = q.getResultList();
+		List<Title> titles = q.getResultList();
+		List<Long> vols = new ArrayList<Long>();
+		for (Title t : titles) {
+			vols.addAll(t.getVolumes());
+		}
 		return vols;
 	}
 	
