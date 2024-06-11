@@ -41,21 +41,11 @@ public class TitleEJB {
 		manager.remove(title);
 	}
 
-	private TitleDTO mapDAOtoDTO(Title title) {
-		TitleDTO newDTO = new TitleDTO();
-		newDTO.setAuthor(title.getAuthor());
-		newDTO.setTitle(title.getTitle());
-		newDTO.setIdt(title.getIdt());
-		List<Long> volumes = title.getVolumes().stream().map(x -> x.getIdv()).collect(Collectors.toList());
-		newDTO.setVolumes(volumes);
-		return newDTO;
-	}
-
 	public List<TitleDTO> get() {
 
 		Query q = manager.createQuery("select t from Title t");
 		List<Title> titlesRaw = q.getResultList();
-		List<TitleDTO> titles = titlesRaw.stream().map(x -> mapDAOtoDTO(x)).collect(Collectors.toList());
+		List<TitleDTO> titles = titlesRaw.stream().map(x -> titleToTitleDTO(x)).collect(Collectors.toList());
 		return titles;
 	}
 
@@ -86,11 +76,8 @@ public class TitleEJB {
 		dto.setIdt(t.getIdt());
 		dto.setAuthor(t.getAuthor());
 		dto.setTitle(t.getTitle());
-		List<Long> v = new ArrayList<Long>();
-		for (Volume vol : t.getVolumes()) {
-			v.add(vol.getIdv());
-		}
-
+		List<Long> volumes = t.getVolumes().stream().map(x -> x.getIdv()).collect(Collectors.toList());
+		dto.setVolumes(volumes);
 		return dto;
 	}
 }

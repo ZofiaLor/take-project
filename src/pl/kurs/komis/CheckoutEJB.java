@@ -29,10 +29,10 @@ public class CheckoutEJB {
 
 	public void update(CheckoutDTO c) {
 		Checkout checkout = manager.find(Checkout.class, c.getIdc());
-		checkout.setDateEnd(LocalDateTime.parse(c.getDateEnd()));
-		checkout.setDateStart(LocalDateTime.parse(c.getDateStart()));
-		checkout.setReader(manager.find(Reader.class, c.getReader()));
-		checkout.setVolume(manager.find(Volume.class, c.getVolume()));
+		if (c.getDateEnd() != null) checkout.setDateEnd(LocalDateTime.parse(c.getDateEnd()));
+		if (c.getDateStart() != null) checkout.setDateStart(LocalDateTime.parse(c.getDateStart()));
+		if (c.getReader() != null )checkout.setReader(manager.find(Reader.class, c.getReader()));
+		if (c.getVolume() != null)checkout.setVolume(manager.find(Volume.class, c.getVolume()));
 		manager.merge(checkout);
 	}
 

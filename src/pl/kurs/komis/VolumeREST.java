@@ -40,6 +40,13 @@ public class VolumeREST {
 	public VolumeDTO findById(@PathParam("idv") long idv) {
 		return bean.findById(idv);
 	}
+	
+	@GET
+	@Path("/{idv}/checkouts")
+	public List<CheckoutDTO> findVolumesCheckouts(@PathParam("idv") long idv) {
+		List<CheckoutDTO> checkouts = bean.findVolumesCheckouts(idv);
+		return checkouts;
+	}
 
 	@PUT
 	public String update(VolumeDTO volume) {

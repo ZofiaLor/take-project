@@ -1,5 +1,6 @@
 package pl.kurs.komis;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,12 @@ public class VolumeEJB {
 		Volume v = manager.find(Volume.class, idv);
 		return this.volumeDAOtoDTO(v);
 	}
+	
+	public List<CheckoutDTO> findVolumesCheckouts(long idv) {
+		Volume v = manager.find(Volume.class, idv);
+		List<CheckoutDTO> c = v.getCheckouts().stream().map(x -> checkoutDAOtoDTO(x)).collect(Collectors.toList());
+		return c;
+	}
 
 	private VolumeDTO volumeDAOtoDTO(Volume v) {
 		VolumeDTO dto = new VolumeDTO();
@@ -49,6 +56,18 @@ public class VolumeEJB {
 		dto.setTitle(v.getTitle().getIdt());
 		List<Long> checkouts = v.getCheckouts().stream().map(x -> x.getIdc()).collect(Collectors.toList());
 		dto.setCheckouts(checkouts);
+		return dto;
+	}
+	
+	private CheckoutDTO checkoutDAOtoDTO(Checkout r) {
+		CheckoutDTO dto = new CheckoutDTO();
+		dto.setIdc(r.getIdc());
+		if (r.getDateStart() != null)
+			dto.setDateStart(r.getDateStart().format(DateTimeFormatter.ISO_DATE_TIME));
+		if (r.getDateEnd() != null)
+			dto.setDateEnd(r.getDateEnd().format(DateTimeFormatter.ISO_DATE_TIME));
+		dto.setReader(r.getReader().getIdr());
+		dto.setVolume(r.getVolume().getIdv());
 		return dto;
 	}
 

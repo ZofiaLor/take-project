@@ -32,12 +32,16 @@ public class ReaderREST {
 	}
 
 	@GET
-	public List<ReaderDTO> get(@QueryParam("author") String author) {
-		List<ReaderDTO> lt;
+	public List<ReaderDTO> get(@QueryParam("name") String name) {
+		List<ReaderDTO> readers;
 
-		lt = bean.get();
+		if (name != null) {
+			readers = bean.getByName(name);
+		} else {
+			readers = bean.get();
+		}
 
-		return lt;
+		return readers;
 	}
 
 	@GET

@@ -35,7 +35,7 @@ public class CheckoutREST {
 	}
 
 	@GET
-	public List<CheckoutDTO> get(@QueryParam("author") String author) {
+	public List<CheckoutDTO> get() {
 		List<CheckoutDTO> lt;
 
 		lt = bean.get();

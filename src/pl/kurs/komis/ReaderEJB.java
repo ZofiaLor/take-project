@@ -21,7 +21,7 @@ public class ReaderEJB {
 
 	public void update(ReaderDTO r) {
 		Reader reader = manager.find(Reader.class, r.getIdr());
-		// ...
+		if (r.getName() != null) reader.setName(r.getName());
 		manager.merge(reader);
 	}
 
@@ -41,6 +41,14 @@ public class ReaderEJB {
 	public ReaderDTO findById(long idr) {
 		Reader v = manager.find(Reader.class, idr);
 		return this.readerDAOtoDTO(v);
+	}
+	
+	public List<ReaderDTO> getByName(String name) {
+		Query q = manager.createQuery("select r from Reader r where r.name like :name");
+		q.setParameter("name", name);
+		@SuppressWarnings("unchecked")
+		List<ReaderDTO> readers = q.getResultList();
+		return readers;
 	}
 
 	private ReaderDTO readerDAOtoDTO(Reader r) {
