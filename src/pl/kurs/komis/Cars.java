@@ -14,8 +14,9 @@ public class Cars {
 		this.cars = cars;
 	}
 
-	public Cars() {	}
-	
+	public Cars() {
+	}
+
 	public List<Car> getCars() {
 		return cars;
 	}
@@ -23,7 +24,5 @@ public class Cars {
 	public void setCars(List<Car> cars) {
 		this.cars = cars;
 	}
-	
-	
-	
+
 }

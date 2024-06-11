@@ -13,8 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 @Path("/komis")
-//@Consumes({ "application/json" })
-//@Produces({ "application/json" })
+// @Consumes({ "application/json" })
+// @Produces({ "application/json" })
 
 @Consumes({ "application/xml" })
 @Produces({ "application/xml" })
@@ -59,13 +59,11 @@ public class KomisREST implements Komis {
 		}
 	}
 
-
 	@Override
 	@DELETE
 	@Path("/{idc}")
 	public void delete(@PathParam("idc") int idc) {
 		bean.delete(idc);
 	}
-
 
 }

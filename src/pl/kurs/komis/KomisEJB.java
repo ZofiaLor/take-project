@@ -9,11 +9,10 @@ import javax.persistence.Query;
 
 @Stateless
 public class KomisEJB {
-	
-	@PersistenceContext(name="komis")
+
+	@PersistenceContext(name = "komis")
 	EntityManager manager;
 
-	
 	public void create(Car car) {
 		System.out.println("Creating car!");
 		manager.persist(car);
@@ -28,7 +27,7 @@ public class KomisEJB {
 		Query q = manager.createQuery("select c from Car c where c.make like :make");
 		q.setParameter("make", make);
 		@SuppressWarnings("unchecked")
-		List<Car> lista =q.getResultList();
+		List<Car> lista = q.getResultList();
 		return lista;
 	}
 
@@ -47,5 +46,4 @@ public class KomisEJB {
 		car = manager.merge(car);
 	}
 
-	
 }

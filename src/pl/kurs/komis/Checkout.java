@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @XmlRootElement
-public class Checkout implements Serializable{
+public class Checkout implements Serializable {
 	private static final long serialVersionUID = 1L;
 	long idc;
 	LocalDateTime dateStart;
@@ -27,43 +27,43 @@ public class Checkout implements Serializable{
 	public long getIdc() {
 		return idc;
 	}
-	
-	public void setIdc(long newIdc){
+
+	public void setIdc(long newIdc) {
 		idc = newIdc;
 	}
-	
+
 	public LocalDateTime getDateStart() {
 		return dateStart;
 	}
-	
+
 	public void setDateStart(LocalDateTime newDateStart) {
 		dateStart = newDateStart;
 	}
-	
+
 	public LocalDateTime getDateEnd() {
 		return dateEnd;
 	}
-	
+
 	public void setDateEnd(LocalDateTime newDateEnd) {
 		dateEnd = newDateEnd;
 	}
-	
+
 	@ManyToOne
 	@JoinColumn(name = "idr")
 	public Reader getReader() {
 		return reader;
 	}
-	
+
 	public void setReader(Reader newReader) {
 		reader = newReader;
 	}
-	
+
 	@ManyToOne
 	@JoinColumn(name = "idv")
 	public Volume getVolume() {
 		return volume;
 	}
-	
+
 	public void setVolume(Volume newVolume) {
 		volume = newVolume;
 	}

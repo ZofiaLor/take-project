@@ -1,5 +1,7 @@
 package pl.kurs.komis;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -17,44 +19,51 @@ import javax.ws.rs.QueryParam;
 @Consumes({ "application/json" })
 @Produces({ "application/json" })
 
-//@Consumes({ "application/xml" })
-//@Produces({ "application/xml" })
+// @Consumes({ "application/xml" })
+// @Produces({ "application/xml" })
 public class TitleREST {
 
 	@EJB
 	TitleEJB bean;
-	
+
 	@POST
 	public String create(TitleDTO title) {
 		bean.create(title);
 		return "Created title!";
 	}
-	
+
 	@GET
 	public List<TitleDTO> get(@QueryParam("author") String author) {
 		List<TitleDTO> lt;
-		if (author != null) {
-			lt = bean.getByAuthor(author);
+		try {
+			if (author != null) {
+				lt = bean.getByAuthor(author);
+			} else {
+				lt = bean.get();
+			}
+			return lt;
+		} catch (Exception ex) {
+			TitleDTO exceptionGuy = new TitleDTO();
+			lt = new ArrayList<TitleDTO>();
+			exceptionGuy.setTitle(ex.getMessage());
+			lt.add(exceptionGuy);
+			return lt;
 		}
-		else {
-			lt = bean.get();
-		}
-		return lt;
 	}
-	
+
 	@GET
 	@Path("/{idt}")
 	public TitleDTO findById(@PathParam("idt") long idt) {
 		return bean.findById(idt);
 	}
-	
+
 	@GET
 	@Path("/{idt}/volumes")
 	public List<Long> findTitlesVolumes(@PathParam("idt") long idt) {
 		List<Long> volumes = bean.findTitlesVolumes(idt);
 		return volumes;
 	}
-	
+
 	@PUT
 	public String update(TitleDTO title) {
 		try {
@@ -65,11 +74,11 @@ public class TitleREST {
 			return "Title not updated :(";
 		}
 	}
-	
+
 	@DELETE
 	@Path("/{idt}")
 	public void delete(@PathParam("idt") long idt) {
 		bean.delete(idt);
 	}
-	
+
 }

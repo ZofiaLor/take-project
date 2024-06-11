@@ -17,30 +17,30 @@ import javax.ws.rs.QueryParam;
 @Consumes({ "application/json" })
 @Produces({ "application/json" })
 
-//@Consumes({ "application/xml" })
-//@Produces({ "application/xml" })
+// @Consumes({ "application/xml" })
+// @Produces({ "application/xml" })
 public class VolumeREST {
 	@EJB
 	VolumeEJB bean;
-	
+
 	@POST
 	public String create(VolumeDTO volume) {
-		
+
 		bean.create(volume);
 		return "Created volume!";
 	}
-	
+
 	@GET
 	public List<VolumeDTO> get() {
 		return bean.get();
 	}
-	
+
 	@GET
 	@Path("/{idv}")
 	public VolumeDTO findById(@PathParam("idv") long idv) {
 		return bean.findById(idv);
 	}
-	
+
 	@PUT
 	public String update(VolumeDTO volume) {
 		try {
@@ -51,7 +51,7 @@ public class VolumeREST {
 			return "Volume not updated :(";
 		}
 	}
-	
+
 	@DELETE
 	@Path("/{idv}")
 	public void delete(@PathParam("idv") long idv) {

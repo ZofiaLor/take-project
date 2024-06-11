@@ -19,39 +19,39 @@ public class Reader implements Serializable {
 	long idr;
 	String name;
 	List<Checkout> checkouts;
-	
+
 	@PreRemove
 	private void preRemove() {
 		for (Checkout c : checkouts) {
 			c.setReader(null);
 		}
 	}
-	
+
 	@Id
 	@GeneratedValue
 	@XmlAttribute
 	public long getIdr() {
 		return idr;
 	}
-	
-	public void setIdr(long newIdr){
+
+	public void setIdr(long newIdr) {
 		idr = newIdr;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String newName) {
 		name = newName;
 	}
-	
+
 	@OneToMany(mappedBy = "reader", cascade = CascadeType.PERSIST)
 	public List<Checkout> getCheckouts() {
 		return checkouts;
 	}
-	
-	public void setCheckouts(List<Checkout> newCheckouts){
+
+	public void setCheckouts(List<Checkout> newCheckouts) {
 		checkouts = newCheckouts;
 	}
 }
