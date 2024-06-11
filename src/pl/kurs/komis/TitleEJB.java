@@ -16,54 +16,65 @@ public class TitleEJB{
 	@PersistenceContext(name="title")
 	EntityManager manager;
 	
-	public void create(Title t) {
-		manager.persist(t);
+	public void create(TitleDTO t) {
+		Title title = new Title();
+		title.setAuthor(t.getAuthor());
+		title.setTitle(t.getTitle());
+		title.setVolumes(new ArrayList<Volume>());
+		manager.persist(title);
 	}
 	
-	public void update(Title t) {
-		manager.merge(t);
+	public void update(TitleDTO t) {
+		Title title = manager.find(Title.class, t.getIdt());
+		if (t.getAuthor() != null) title.setAuthor(t.getAuthor());
+		if (t.getTitle() != null) title.setTitle(t.getTitle());
+		manager.merge(title);
 	}
 	
-	public void delete(Object t) {
-		Object ref = manager.merge(t);
-		manager.remove(ref);
+	public void delete(long idt) {
+		Title title = manager.find(Title.class, idt);
+		manager.remove(title);
 	}
 	
-	public List<Title> get(){
-		Query q = manager.createQuery("select t.idt, t.author, t.title from Title t");
+	public List<TitleDTO> get(){
+		Query q = manager.createQuery("select t from Title t");
 		@SuppressWarnings("unchecked")
-		List<Title> titles = q.getResultList();
+		List<TitleDTO> titles = q.getResultList();
 		return titles;
 	}
 	
-	public List<Title> findById(long idt) {
-		Query q = manager.createQuery("select t.idt, t.author, t.title from Title t where t.idt = :idt");
-		System.out.println(idt);
-		q.setParameter("idt", idt);
-		@SuppressWarnings("unchecked")
-		List<Title> title = q.getResultList();
-		System.out.println(title.size());
-		return title;
+	public TitleDTO findById(long idt) {
+		Title t = manager.find(Title.class, idt);
+		return this.titleToTitleDTO(t);
 	}
 	
 	public List<Long> findTitlesVolumes(long idt){
-		Query q = manager.createQuery("select t from Title t where t.idt = :idt");
-		q.setParameter("idt", idt);
-		@SuppressWarnings("unchecked")
-		List<Title> titles = q.getResultList();
-		List<Long> vols = new ArrayList<Long>();
-		for (Title t : titles) {
-			vols.addAll(t.getVolumes());
+		Title title = manager.find(Title.class, idt);
+		List<Long> v = new ArrayList<Long>();
+		for (Volume vol : title.getVolumes()) {
+			v.add(vol.getIdv());
 		}
-		return vols;
+		return v;
 	}
 	
-	public List<Title> getByAuthor(String author){
-		Query q = manager.createQuery("select t.idt, t.author, t.title from Title t where t.author like :author");
+	public List<TitleDTO> getByAuthor(String author){
+		Query q = manager.createQuery("select t from Title t where t.author like :author");
 		q.setParameter("author", author);
 		@SuppressWarnings("unchecked")
-		List<Title> titles = q.getResultList();
+		List<TitleDTO> titles = q.getResultList();
 		return titles;
 	}
 
+	private TitleDTO titleToTitleDTO(Title t) {
+		TitleDTO dto = new TitleDTO();
+		dto.setIdt(t.getIdt());
+		dto.setAuthor(t.getAuthor());
+		dto.setTitle(t.getTitle());
+		List<Long> v = new ArrayList<Long>();
+		for (Volume vol : t.getVolumes()) {
+			v.add(vol.getIdv());
+		}
+		
+		return dto;
+	}
 }

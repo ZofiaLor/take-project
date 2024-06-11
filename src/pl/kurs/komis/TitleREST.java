@@ -25,29 +25,27 @@ public class TitleREST {
 	TitleEJB bean;
 	
 	@POST
-	public String create(Title title) {
+	public String create(TitleDTO title) {
 		bean.create(title);
 		return "Created title!";
 	}
 	
 	@GET
-	public Titles get(@QueryParam("author") String author) {
-		List<Title> lt;
+	public List<TitleDTO> get(@QueryParam("author") String author) {
+		List<TitleDTO> lt;
 		if (author != null) {
 			lt = bean.getByAuthor(author);
 		}
 		else {
 			lt = bean.get();
 		}
-		Titles titles = new Titles(lt);
-		return titles;
+		return lt;
 	}
 	
 	@GET
 	@Path("/{idt}")
-	public List<Title> findById(@PathParam("idt") long idt) {
-		List<Title> title = bean.findById(idt);
-		return title;
+	public TitleDTO findById(@PathParam("idt") long idt) {
+		return bean.findById(idt);
 	}
 	
 	@GET
@@ -58,7 +56,7 @@ public class TitleREST {
 	}
 	
 	@PUT
-	public String update(Title title) {
+	public String update(TitleDTO title) {
 		try {
 			bean.update(title);
 			return "Title updated!";
