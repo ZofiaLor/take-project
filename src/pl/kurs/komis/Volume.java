@@ -20,14 +20,14 @@ public class Volume implements Serializable {
 	private static final long serialVersionUID = 1L;
 	long idv;
 	Title title;
-	// List<Checkout> checkouts;
+	List<Checkout> checkouts;
 
-	// @PreRemove
-	// public void preRemove() {
-	// for (Checkout c : checkouts) {
-	// c.setReader(null);
-	// }
-	// }
+	 @PreRemove
+	 public void preRemove() {
+		 for (Checkout c : checkouts) {
+		 c.setReader(null);
+		 }
+	 }
 
 	@Id
 	@GeneratedValue
@@ -50,13 +50,13 @@ public class Volume implements Serializable {
 		title = newTitle;
 	}
 
-	// @OneToMany(mappedBy = "volume", cascade = CascadeType.PERSIST)
-	// public List<Checkout> getCheckouts() {
-	// return checkouts;
-	// }
-	//
-	// public void setCheckouts(List<Checkout> newCheckouts) {
-	// checkouts = newCheckouts;
-	// }
+	 @OneToMany(mappedBy = "volume", cascade = CascadeType.PERSIST)
+	 public List<Checkout> getCheckouts() {
+	 return checkouts;
+	 }
+	
+	 public void setCheckouts(List<Checkout> newCheckouts) {
+	 checkouts = newCheckouts;
+	 }
 
 }

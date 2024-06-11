@@ -1,16 +1,12 @@
 package pl.kurs.komis;
 
+import java.util.List;
+
 public class VolumeDTO {
 	long idv;
 	Long title;
-	// List<Checkout> checkouts;
+	List<Long> checkouts;
 
-	// @PreRemove
-	// public void preRemove() {
-	// for (Checkout c : checkouts) {
-	// c.setReader(null);
-	// }
-	// }
 
 	public long getIdv() {
 		return idv;
@@ -28,12 +24,11 @@ public class VolumeDTO {
 		title = newTitle;
 	}
 
-	// @OneToMany(mappedBy = "volume", cascade = CascadeType.PERSIST)
-	// public List<Checkout> getCheckouts() {
-	// return checkouts;
-	// }
-	//
-	// public void setCheckouts(List<Checkout> newCheckouts) {
-	// checkouts = newCheckouts;
-	// }
+	 public List<Long> getCheckouts() {
+	 return checkouts;
+	 }
+	
+	 public void setCheckouts(List<Long> newCheckouts) {
+	 checkouts = newCheckouts;
+	 }
 }

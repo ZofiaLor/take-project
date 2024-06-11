@@ -47,6 +47,8 @@ public class VolumeEJB {
 		VolumeDTO dto = new VolumeDTO();
 		dto.setIdv(v.getIdv());
 		dto.setTitle(v.getTitle().getIdt());
+		List<Long> checkouts = v.getCheckouts().stream().map(x -> x.getIdc()).collect(Collectors.toList());
+		dto.setCheckouts(checkouts);
 		return dto;
 	}
 
