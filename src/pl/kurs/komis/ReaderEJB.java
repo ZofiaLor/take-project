@@ -1,5 +1,6 @@
 package pl.kurs.komis;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,8 +56,15 @@ public class ReaderEJB {
 		Query q = manager.createQuery("select r from Reader r where r.name like :name");
 		q.setParameter("name", name);
 		@SuppressWarnings("unchecked")
-		List<ReaderDTO> readers = q.getResultList();
-		return readers;
+		List<Reader> readers = q.getResultList();
+		return readers.stream().map(x -> readerDAOtoDTO(x)).collect(Collectors.toList());
+	}
+	
+	public List<CheckoutDTO> findReadersCheckouts(long idr) {
+		Reader reader = manager.find(Reader.class, idr);
+		if (reader == null) throw new WebApplicationException(404);
+		List<CheckoutDTO> c = reader.getCheckouts().stream().map(x -> checkoutDAOtoDTO(x)).collect(Collectors.toList());
+		return c;
 	}
 
 	private ReaderDTO readerDAOtoDTO(Reader r) {
@@ -65,6 +73,18 @@ public class ReaderEJB {
 		dto.setName(r.getName());
 		List<Long> checkouts = r.getCheckouts().stream().map(x -> x.getIdc()).collect(Collectors.toList());
 		dto.setCheckouts(checkouts);
+		return dto;
+	}
+	
+	private CheckoutDTO checkoutDAOtoDTO(Checkout r) {
+		CheckoutDTO dto = new CheckoutDTO();
+		dto.setIdc(r.getIdc());
+		if (r.getDateStart() != null)
+			dto.setDateStart(r.getDateStart().format(DateTimeFormatter.ISO_DATE_TIME));
+		if (r.getDateEnd() != null)
+			dto.setDateEnd(r.getDateEnd().format(DateTimeFormatter.ISO_DATE_TIME));
+		dto.setReader(r.getReader().getIdr());
+		dto.setVolume(r.getVolume().getIdv());
 		return dto;
 	}
 

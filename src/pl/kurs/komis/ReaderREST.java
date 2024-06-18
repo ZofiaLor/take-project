@@ -52,10 +52,10 @@ public class ReaderREST {
 
 	@GET
 	@Path("/{idr}/checkouts")
-	public List<Long> findReadersCheckouts(@PathParam("idr") long idr) {
+	public List<CheckoutDTO> findReadersCheckouts(@PathParam("idr") long idr) {
 		// TODO implement this in bean
-		List<Long> volumes = new ArrayList<Long>();// bean.findReadersCheckouts(idr);
-		return volumes;
+		List<CheckoutDTO> c = bean.findReadersCheckouts(idr);
+		return c;
 	}
 
 	@PUT

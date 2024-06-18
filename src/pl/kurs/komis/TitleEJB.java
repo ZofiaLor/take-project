@@ -74,8 +74,8 @@ public class TitleEJB {
 		Query q = manager.createQuery("select t from Title t where t.author like :author");
 		q.setParameter("author", author);
 		@SuppressWarnings("unchecked")
-		List<TitleDTO> titles = q.getResultList();
-		return titles;
+		List<Title> titles = q.getResultList();
+		return titles.stream().map(x -> titleToTitleDTO(x)).collect(Collectors.toList());
 	}
 
 	private TitleDTO titleToTitleDTO(Title t) {
