@@ -1,6 +1,7 @@
 package pl.kurs.komis;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,26 +9,39 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.WebApplicationException;
 
 @Stateless
 public class VolumeEJB {
 	@PersistenceContext(name = "volume")
 	EntityManager manager;
 
-	public void create(VolumeDTO v) {
+	public VolumeDTO create(VolumeDTO v) {
 		Volume volume = new Volume();
-		volume.setTitle(manager.find(Title.class, v.getTitle()));
+		Title t = manager.find(Title.class, v.getTitle());
+		if (t == null) throw new WebApplicationException(400);
+		volume.setTitle(t);
+		
+		volume.setCheckouts(new ArrayList<Checkout>());
 		manager.persist(volume);
+		return this.volumeDAOtoDTO(volume);
 	}
 
-	public void update(VolumeDTO v) {
+	public VolumeDTO update(VolumeDTO v) {
 		Volume volume = manager.find(Volume.class, v.getIdv());
-		// ...
+		if (volume == null) throw new WebApplicationException(404);
+		if (v.getTitle() != null) {
+			Title t = manager.find(Title.class, v.getTitle());
+			if (t == null) throw new WebApplicationException(400);
+			volume.setTitle(t);
+		}
 		manager.merge(volume);
+		return this.volumeDAOtoDTO(volume);
 	}
 
 	public void delete(long idv) {
 		Volume volume = manager.find(Volume.class, idv);
+		if (volume == null) throw new WebApplicationException(404);
 		manager.remove(volume);
 	}
 
@@ -41,11 +55,13 @@ public class VolumeEJB {
 
 	public VolumeDTO findById(long idv) {
 		Volume v = manager.find(Volume.class, idv);
+		if (v == null) throw new WebApplicationException(404);
 		return this.volumeDAOtoDTO(v);
 	}
 	
 	public List<CheckoutDTO> findVolumesCheckouts(long idv) {
 		Volume v = manager.find(Volume.class, idv);
+		if (v == null) throw new WebApplicationException(404);
 		List<CheckoutDTO> c = v.getCheckouts().stream().map(x -> checkoutDAOtoDTO(x)).collect(Collectors.toList());
 		return c;
 	}

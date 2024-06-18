@@ -29,9 +29,9 @@ public class CheckoutREST {
 	CheckoutEJB bean;
 
 	@POST
-	public String create(CheckoutDTO checkout) {
-		bean.create(checkout);
-		return "Created checkout!";
+	public CheckoutDTO create(CheckoutDTO checkout) {
+		
+		return bean.create(checkout);
 	}
 
 	@GET
@@ -68,14 +68,8 @@ public class CheckoutREST {
 	}
 
 	@PUT
-	public String update(CheckoutDTO checkout) {
-		try {
-			bean.update(checkout);
-			return "Checkout updated!";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Checkout not updated :(";
-		}
+	public CheckoutDTO update(CheckoutDTO checkout) {
+		return bean.update(checkout);
 	}
 
 	@DELETE

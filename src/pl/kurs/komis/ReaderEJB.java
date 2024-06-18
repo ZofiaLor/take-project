@@ -1,5 +1,6 @@
 package pl.kurs.komis;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,26 +8,32 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.WebApplicationException;
 
 @Stateless
 public class ReaderEJB {
 	@PersistenceContext(name = "reader")
 	EntityManager manager;
 
-	public void create(ReaderDTO r) {
+	public ReaderDTO create(ReaderDTO r) {
 		Reader reader = new Reader();
 		reader.setName(r.getName());
+		reader.setCheckouts(new ArrayList<Checkout>());
 		manager.persist(reader);
+		return this.readerDAOtoDTO(reader);
 	}
 
-	public void update(ReaderDTO r) {
+	public ReaderDTO update(ReaderDTO r) {
 		Reader reader = manager.find(Reader.class, r.getIdr());
+		if (reader == null) throw new WebApplicationException(404);
 		if (r.getName() != null) reader.setName(r.getName());
 		manager.merge(reader);
+		return this.readerDAOtoDTO(reader);
 	}
 
 	public void delete(long idr) {
 		Reader reader = manager.find(Reader.class, idr);
+		if (reader == null) throw new WebApplicationException(404);
 		manager.remove(reader);
 	}
 
@@ -39,8 +46,9 @@ public class ReaderEJB {
 	}
 
 	public ReaderDTO findById(long idr) {
-		Reader v = manager.find(Reader.class, idr);
-		return this.readerDAOtoDTO(v);
+		Reader r = manager.find(Reader.class, idr);
+		if (r == null) throw new WebApplicationException(404);
+		return this.readerDAOtoDTO(r);
 	}
 	
 	public List<ReaderDTO> getByName(String name) {

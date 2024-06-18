@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.WebApplicationException;
 
 @Stateless
 public class CheckoutEJB {
@@ -16,28 +17,44 @@ public class CheckoutEJB {
 	@PersistenceContext(name = "checkout")
 	EntityManager manager;
 
-	public void create(CheckoutDTO r) {
+	public CheckoutDTO create(CheckoutDTO c) {
 		Checkout checkout = new Checkout();
 		LocalDateTime now = LocalDateTime.now();
 		checkout.setDateStart(now); // set to time of creation
 		checkout.setDateEnd(null); // set to null, updated witn the .../end
 									// endpoint
-		checkout.setReader(manager.find(Reader.class, r.getReader()));
-		checkout.setVolume(manager.find(Volume.class, r.getVolume()));
+		Reader r = manager.find(Reader.class, c.getReader());
+		if (r == null) throw new WebApplicationException(400);
+		checkout.setReader(r);
+		Volume v = manager.find(Volume.class, c.getVolume());
+		if (v == null) throw new WebApplicationException(400);
+		checkout.setVolume(v);
 		manager.persist(checkout);
+		return this.checkoutDAOtoDTO(checkout);
 	}
 
-	public void update(CheckoutDTO c) {
+	public CheckoutDTO update(CheckoutDTO c) {
 		Checkout checkout = manager.find(Checkout.class, c.getIdc());
+		if (checkout == null) throw new WebApplicationException(404);
 		if (c.getDateEnd() != null) checkout.setDateEnd(LocalDateTime.parse(c.getDateEnd()));
 		if (c.getDateStart() != null) checkout.setDateStart(LocalDateTime.parse(c.getDateStart()));
-		if (c.getReader() != null )checkout.setReader(manager.find(Reader.class, c.getReader()));
-		if (c.getVolume() != null)checkout.setVolume(manager.find(Volume.class, c.getVolume()));
+		if (c.getReader() != null ) {
+			Reader r = manager.find(Reader.class, c.getReader());
+			if (r == null) throw new WebApplicationException(400);
+			checkout.setReader(r);
+		}
+		if (c.getVolume() != null) {
+			Volume v = manager.find(Volume.class, c.getVolume());
+			if (v == null) throw new WebApplicationException(400);
+			checkout.setVolume(v);
+		}
 		manager.merge(checkout);
+		return this.checkoutDAOtoDTO(checkout);
 	}
 
 	public void delete(long idc) {
 		Checkout checkout = manager.find(Checkout.class, idc);
+		if (checkout == null) throw new WebApplicationException(404);
 		manager.remove(checkout);
 	}
 
@@ -50,8 +67,9 @@ public class CheckoutEJB {
 	}
 
 	public CheckoutDTO findById(long idc) {
-		Checkout v = manager.find(Checkout.class, idc);
-		return this.checkoutDAOtoDTO(v);
+		Checkout c = manager.find(Checkout.class, idc);
+		if (c == null) throw new WebApplicationException(404);
+		return this.checkoutDAOtoDTO(c);
 	}
 
 	private CheckoutDTO checkoutDAOtoDTO(Checkout r) {

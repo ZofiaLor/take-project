@@ -26,9 +26,9 @@ public class ReaderREST {
 	ReaderEJB bean;
 
 	@POST
-	public String create(ReaderDTO reader) {
-		bean.create(reader);
-		return "Created reader!";
+	public ReaderDTO create(ReaderDTO reader) {
+		
+		return bean.create(reader);
 	}
 
 	@GET
@@ -59,14 +59,8 @@ public class ReaderREST {
 	}
 
 	@PUT
-	public String update(ReaderDTO reader) {
-		try {
-			bean.update(reader);
-			return "Reader updated!";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Reader not updated :(";
-		}
+	public ReaderDTO update(ReaderDTO reader) {
+		return bean.update(reader);
 	}
 
 	@DELETE

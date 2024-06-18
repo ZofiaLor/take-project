@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 
 @Path("/volume")
 @Consumes({ "application/json" })
@@ -24,10 +25,9 @@ public class VolumeREST {
 	VolumeEJB bean;
 
 	@POST
-	public String create(VolumeDTO volume) {
+	public VolumeDTO create(VolumeDTO volume) {
 
-		bean.create(volume);
-		return "Created volume!";
+		return bean.create(volume);
 	}
 
 	@GET
@@ -49,14 +49,8 @@ public class VolumeREST {
 	}
 
 	@PUT
-	public String update(VolumeDTO volume) {
-		try {
-			bean.update(volume);
-			return "Volume updated!";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Volume not updated :(";
-		}
+	public VolumeDTO update(VolumeDTO volume) {
+		return bean.update(volume);
 	}
 
 	@DELETE

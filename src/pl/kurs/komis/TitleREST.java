@@ -27,28 +27,20 @@ public class TitleREST {
 	TitleEJB bean;
 
 	@POST
-	public String create(TitleDTO title) {
-		bean.create(title);
-		return "Created title!";
+	public TitleDTO create(TitleDTO title) {
+		
+		return bean.create(title);
 	}
 
 	@GET
 	public List<TitleDTO> get(@QueryParam("author") String author) {
 		List<TitleDTO> lt;
-		try {
-			if (author != null) {
-				lt = bean.getByAuthor(author);
-			} else {
-				lt = bean.get();
-			}
-			return lt;
-		} catch (Exception ex) {
-			TitleDTO exceptionGuy = new TitleDTO();
-			lt = new ArrayList<TitleDTO>();
-			exceptionGuy.setTitle(ex.getMessage());
-			lt.add(exceptionGuy);
-			return lt;
+		if (author != null) {
+			lt = bean.getByAuthor(author);
+		} else {
+			lt = bean.get();
 		}
+		return lt;
 	}
 
 	@GET
@@ -65,14 +57,8 @@ public class TitleREST {
 	}
 
 	@PUT
-	public String update(TitleDTO title) {
-		try {
-			bean.update(title);
-			return "Title updated!";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Title not updated :(";
-		}
+	public TitleDTO update(TitleDTO title) {
+		return bean.update(title);
 	}
 
 	@DELETE

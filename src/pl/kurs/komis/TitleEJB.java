@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.WebApplicationException;
 
 @Stateless
 public class TitleEJB {
@@ -19,25 +20,29 @@ public class TitleEJB {
 	@PersistenceContext(name = "title")
 	EntityManager manager;
 
-	public void create(TitleDTO t) {
+	public TitleDTO create(TitleDTO t) {
 		Title title = new Title();
 		title.setAuthor(t.getAuthor());
 		title.setTitle(t.getTitle());
 		title.setVolumes(new ArrayList<Volume>());
 		manager.persist(title);
+		return this.titleToTitleDTO(title);
 	}
 
-	public void update(TitleDTO t) {
+	public TitleDTO update(TitleDTO t) {
 		Title title = manager.find(Title.class, t.getIdt());
+		if (title == null) throw new WebApplicationException(404);
 		if (t.getAuthor() != null)
 			title.setAuthor(t.getAuthor());
 		if (t.getTitle() != null)
 			title.setTitle(t.getTitle());
 		manager.merge(title);
+		return this.titleToTitleDTO(title);
 	}
 
 	public void delete(long idt) {
 		Title title = manager.find(Title.class, idt);
+		if (title == null) throw new WebApplicationException(404);
 		manager.remove(title);
 	}
 
@@ -51,11 +56,13 @@ public class TitleEJB {
 
 	public TitleDTO findById(long idt) {
 		Title t = manager.find(Title.class, idt);
+		if (t == null) throw new WebApplicationException(404);
 		return this.titleToTitleDTO(t);
 	}
 
 	public List<Long> findTitlesVolumes(long idt) {
 		Title title = manager.find(Title.class, idt);
+		if (title == null) throw new WebApplicationException(404);
 		List<Long> v = new ArrayList<Long>();
 		for (Volume vol : title.getVolumes()) {
 			v.add(vol.getIdv());
