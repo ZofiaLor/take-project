@@ -59,12 +59,12 @@ public class CheckoutREST {
 
 	@POST
 	@Path("/{idc}/end")
-	public String endCheckout(@PathParam("idc") long idc) {
+	public CheckoutDTO endCheckout(@PathParam("idc") long idc) {
 		LocalDateTime now = LocalDateTime.now();
 		CheckoutDTO dto = this.findById(idc);
-		dto.setDateEnd(now.format(DateTimeFormatter.ISO_DATE_TIME));
+		if(dto.getDateEnd() == null) dto.setDateEnd(now.format(DateTimeFormatter.ISO_DATE_TIME));
 		bean.update(dto);
-		return "Checkout ended on " + now;
+		return dto;
 	}
 
 	@PUT
