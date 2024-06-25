@@ -49,14 +49,6 @@ public class CheckoutREST {
 		return bean.findById(idc);
 	}
 
-	@GET
-	@Path("/{idc}/checkouts")
-	public List<Long> findCheckoutsCheckouts(@PathParam("idc") long idc) {
-		// TODO implement this in bean
-		List<Long> volumes = new ArrayList<Long>();// bean.findCheckoutsCheckouts(idc);
-		return volumes;
-	}
-
 	@POST
 	@Path("/{idc}/end")
 	public CheckoutDTO endCheckout(@PathParam("idc") long idc) {
